@@ -32,7 +32,6 @@ fi
 
 for DIR in {$PATHFROM,$PATHTO}
 do
-    echo $DIR
     if [ ! -d $DIR ]; then
         echo "Error: Directory '$DIR' DOES NOT exists." 
         exit 1
@@ -49,5 +48,7 @@ do
 done
 
 
+sudo update-alternatives --install $PATHTO/$PREFIX"gcc" $PREFIX"gcc" $PATHFROM/$PREFIX"gcc" $PRIO --slave $PATHTO/$PREFIX"gdb" $PREFIX"gdb" $PATHFROM/$PREFIX"gdb"
 
-#sudo update-alternatives --install $PATHTO/$PREFIX"-gcc" $PREFIX"-gcc" $PATHFROM/$PREFIX"-gcc" $PRIO --slave $PATHTO/$PREFIX"-gdb" $PREFIX"-gdb" $PATHFROM/$PREFIX"-gdb"
+VERSION=$($PREFIX""gcc -dumpversion)
+echo "You are using '$PREFIX""gcc' version: $VERSION"
