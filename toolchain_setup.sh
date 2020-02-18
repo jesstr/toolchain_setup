@@ -6,6 +6,16 @@ PATHTO=$2
 PRIO=$3
 PREFIX=${4:-"arm-none-eabi-"}
 
+TOOL_SET=(
+    "gcc"
+    "gdb"
+    "as"
+    "size"
+    "objcopy"
+    "objdump"
+    "nm"
+)
+
 
 usage() {
     echo "Usage: ./add_toolchain.sh PATHFROM PATHTO PRIO [PREFIX]"
@@ -38,7 +48,7 @@ do
     fi
 done
 
-for TOOL in {"gcc","gdb"}
+for TOOL in ${TOOL_SET[@]}
 do
     FILENAME=$PATHFROM/$PREFIX$TOOL
     if [ ! -f $FILENAME ]; then
@@ -48,7 +58,18 @@ do
 done
 
 
-sudo update-alternatives --install $PATHTO/$PREFIX"gcc" $PREFIX"gcc" $PATHFROM/$PREFIX"gcc" $PRIO --slave $PATHTO/$PREFIX"gdb" $PREFIX"gdb" $PATHFROM/$PREFIX"gdb"
+PATHFROM=$(realpath $PATHFROM)
+PATHTO=$(realpath $PATHTO)
 
-VERSION=$($PREFIX""gcc -dumpversion)
-echo "You are using '$PREFIX""gcc' version: $VERSION"
+for TOOL in ${TOOL_SET[@]}
+do
+    if [ $TOOL != "gcc" ]; then
+        FILENAME=$PREFIX""$TOOL
+        SLAVES+="--slave $PATHTO/$FILENAME $FILENAME $PATHFROM/$FILENAME "
+    fi
+done
+
+sudo update-alternatives --install $PATHTO/$PREFIX"gcc" $PREFIX"gcc" $PATHFROM/$PREFIX"gcc" $PRIO $SLAVES
+
+VERSION=$($PREFIX"gcc" -dumpversion)
+echo "You are using '$PREFIX"gcc"' version: $VERSION"
