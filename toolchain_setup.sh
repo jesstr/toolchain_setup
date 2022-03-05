@@ -1,5 +1,5 @@
 
-# ./add_cross PATHFROM PATHTO PRIO [PREFIX]
+# ./toolchain_setup.sh PATHFROM PATHTO PRIO [PREFIX]
 
 PATHFROM=$1
 PATHTO=$2
