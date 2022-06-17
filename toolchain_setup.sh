@@ -18,9 +18,15 @@ TOOL_SET=(
 
 
 usage() {
-    echo "Usage: ./add_toolchain.sh PATHFROM PATHTO PRIO [PREFIX]"
+    echo "Usage: ./toolchain_setup.sh PATHFROM PATHTO PRIO [PREFIX]"
+    echo "Example:"
+    echo "  $ ./toolchain_setup.sh ~/gcc-arm-none-eabi-7-2017-q4-major/bin/ /usr/bin/ 0"
 }
 
+if [ $1 == "-h" ]; then
+    usage
+    exit 0
+fi
 
 if [ -z $1 ]; then
     echo "Error: PATHFROM is NOT set"
